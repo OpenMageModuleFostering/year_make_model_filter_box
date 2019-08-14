@@ -32,7 +32,6 @@ class Pektsekye_Ymm_Adminhtml_YmmController extends Mage_Adminhtml_Controller_ac
 			$this->_setActiveMenu('ymm/items');
 
 			$this->_addBreadcrumb(Mage::helper('adminhtml')->__('Item Manager'), Mage::helper('adminhtml')->__('Item Manager'));
-			$this->_addBreadcrumb(Mage::helper('adminhtml')->__('Item News'), Mage::helper('adminhtml')->__('Item News'));
 
 			$this->getLayout()->getBlock('head')->setCanLoadExtJs(true);
 
@@ -53,45 +52,17 @@ class Pektsekye_Ymm_Adminhtml_YmmController extends Mage_Adminhtml_Controller_ac
 	public function saveAction() {
 		if ($data = $this->getRequest()->getPost()) {
 			
-			if(isset($_FILES['filename']['name']) && $_FILES['filename']['name'] != '') {
-				try {	
-					/* Starting upload */	
-					$uploader = new Varien_File_Uploader('filename');
-					
-					// Any extention would work
-	           		$uploader->setAllowedExtensions(array('jpg','jpeg','gif','png'));
-					$uploader->setAllowRenameFiles(false);
-					
-					// Set the file upload mode 
-					// false -> get the file directly in the specified folder
-					// true -> get the file in the product like folders 
-					//	(file.jpg will go in something like /media/f/i/file.jpg)
-					$uploader->setFilesDispersion(false);
-							
-					// We set media as the upload dir
-					$path = Mage::getBaseDir('media') . DS ;
-					$uploader->save($path, $_FILES['filename']['name'] );
-					
-				} catch (Exception $e) {
-		      
-		        }
-	        
-		        //this way the name is saved in DB
-	  			$data['filename'] = $_FILES['filename']['name'];
-			}
-	  			
-	  			
+			$data ['products_id'] = (int) $data ['products_id'];
+			$data ['products_car_make'] = trim(preg_replace('/[^\w\s-]/','',$data ['products_car_make']));
+			$data ['products_car_model'] = trim(preg_replace('/[^\w\s-]/','',$data ['products_car_model']));
+			$data ['products_car_year_bof'] = (int) $data ['products_car_year_bof'];
+			$data ['products_car_year_eof'] = (int) $data ['products_car_year_eof'];
+
 			$model = Mage::getModel('ymm/ymm');		
 			$model->setData($data)
 				->setId($this->getRequest()->getParam('id'));
 			
 			try {
-				if ($model->getCreatedTime == NULL || $model->getUpdateTime() == NULL) {
-					$model->setCreatedTime(now())
-						->setUpdateTime(now());
-				} else {
-					$model->setUpdateTime(now());
-				}	
 				
 				$model->save();
 				Mage::getSingleton('adminhtml/session')->addSuccess(Mage::helper('ymm')->__('Item was successfully saved'));
@@ -178,23 +149,6 @@ class Pektsekye_Ymm_Adminhtml_YmmController extends Mage_Adminhtml_Controller_ac
         $this->_redirect('*/*/index');
     }
   
-    public function exportCsvAction()
-    {
-        $fileName   = 'ymm.csv';
-        $content    = $this->getLayout()->createBlock('ymm/adminhtml_ymm_grid')
-            ->getCsv();
-
-        $this->_sendUploadResponse($fileName, $content);
-    }
-
-    public function exportXmlAction()
-    {
-        $fileName   = 'ymm.xml';
-        $content    = $this->getLayout()->createBlock('ymm/adminhtml_ymm_grid')
-            ->getXml();
-
-        $this->_sendUploadResponse($fileName, $content);
-    }
 
     protected function _sendUploadResponse($fileName, $content, $contentType='application/octet-stream')
     {
@@ -211,4 +165,129 @@ class Pektsekye_Ymm_Adminhtml_YmmController extends Mage_Adminhtml_Controller_ac
         $response->sendResponse();
         die;
     }
+	
+
+    /**
+     * Import and export Page
+     *
+     */
+    public function importExportAction()
+    {
+        $this->loadLayout()
+            ->_setActiveMenu('ymm/import')
+            ->_addContent($this->getLayout()->createBlock('ymm/adminhtml_ymm_importExport'))
+            ->renderLayout();
+    }
+
+    /**
+     * import action from import/export ymm
+     *
+     */
+    public function importPostAction()
+    {
+        if ($this->getRequest()->isPost() && !empty($_FILES['import_ymm_file']['tmp_name'])) {
+            try {
+                $number = $this->_importYmm();
+
+                Mage::getSingleton('adminhtml/session')->addSuccess(Mage::helper('ymm')->__('%d new item(s) were imported',$number));
+            }
+            catch (Mage_Core_Exception $e) {
+                Mage::getSingleton('adminhtml/session')->addError($e->getMessage());
+            }
+            catch (Exception $e) {
+                Mage::getSingleton('adminhtml/session')->addError(Mage::helper('ymm')->__('Invalid file upload attempt'));
+            }
+        }
+        else {
+            Mage::getSingleton('adminhtml/session')->addError(Mage::helper('ymm')->__('Invalid file upload attempt'));
+        }
+        $this->_redirect('*/*/importExport');
+    }
+
+    protected function _importYmm()
+    {
+        $fileName   = $_FILES['import_ymm_file']['tmp_name'];
+        $csvObject  = new Varien_File_Csv();
+        $csvData = $csvObject->getData($fileName);
+		$number = 0;
+        /** checks columns */
+        $csvFields  = array(
+            0   => Mage::helper('ymm')->__('Products ID'),
+            1   => Mage::helper('ymm')->__('Vehicle Make'),
+            2   => Mage::helper('ymm')->__('Vehicle Model'),
+            3   => Mage::helper('ymm')->__('From Year'),
+            4   => Mage::helper('ymm')->__('To Year')
+        );
+
+        if ($csvData[0] == $csvFields) {
+            foreach ($csvData as $k => $v) {
+                if ($k == 0) {
+                    continue;
+                }
+
+                //end of file has more then one empty lines
+                if (count($v) <= 1 && !strlen($v[0])) {
+                    continue;
+                }
+
+                if (count($csvFields) != count($v)) {
+                    Mage::getSingleton('adminhtml/session')->addError(Mage::helper('ymm')->__('Invalid file upload attempt'));
+                }
+				
+				if (!empty($v[0]) && is_numeric($v[0]) && !empty($v[1])) {
+					
+				    $v[1] = trim(preg_replace('/[^\w\s-]/','',$v[1]));
+					$v[2] = trim(preg_replace('/[^\w\s-]/','',$v[2]));
+					
+					$resource = Mage::getSingleton('core/resource');
+					$read= $resource->getConnection('core_read');
+					$ymmTable = $resource->getTableName('ymm');
+					$select = $read->select()
+											->from($ymmTable,array('id'))
+											->where("products_id=?",(int)$v[0])
+											->where("products_car_make=?",$v[1])
+											->where("products_car_model=?",$v[2])
+											->where("products_car_year_bof=?",(int)$v[3])
+											->where("products_car_year_eof=?",(int)$v[4])											
+											->limit(1);
+											
+					if($read->fetchOne($select)){
+						 continue;
+					}	 
+
+					$data  = array(
+						'products_id'=>$v[0],
+						'products_car_make' => $v[1],
+						'products_car_model' => $v[2],
+						'products_car_year_bof'  => $v[3],
+						'products_car_year_eof'=>$v[4],
+					);
+
+					$model  = Mage::getModel('ymm/ymm');
+					$model->setData($data);
+					$model->save();
+					$number++;
+                }
+            }  
+        }
+        else {
+            Mage::throwException(Mage::helper('tax')->__('Invalid file format upload attempt'));
+        }
+		
+		return $number;
+    }
+
+    /**
+     * export action from import/export tax
+     *
+     */
+    public function exportPostAction()
+    {
+        $fileName   = 'ymm.csv';
+        $content    = $this->getLayout()->createBlock('ymm/adminhtml_ymm_grid')
+            ->getCsv();
+
+        $this->_sendUploadResponse($fileName, $content);
+    }
+	
 }

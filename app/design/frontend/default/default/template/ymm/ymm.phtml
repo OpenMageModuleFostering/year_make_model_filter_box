@@ -1,6 +1,6 @@
 <?php
 /*
-Written by pektsekye@gmail.com on Monday Jul 20  2009
+Written by pektsekye@gmail.com on Friday Jul 24  2009
 version 1.0
 */
 
@@ -32,36 +32,40 @@ var c = new Array();';
 
 	$y = array();
 	$M_a = array();
-	$products_car_make_old = '';
-	$products_car_model_old = ''; 
+	$make_old = '';
+	$model_old = ''; 
 	
 	foreach ($rows as $Makes) {
 		
-			if (!isset($M_a [$Makes['products_car_make']]))
-				$Make_array[] = array('id' => $Makes['products_car_make'], 'text' => $Makes['products_car_make']);
+			$make = $Makes['products_car_make'];
+			$model = $Makes['products_car_model'];
+			$year_bof = $Makes['products_car_year_bof'];
+			$year_eof = $Makes['products_car_year_eof'];
+			
+			if (!isset($M_a [$make]))
+				$Make_array[] = array('id' => $make, 'text' => $make);
 
-						
-			if (!isset($M_a [$Makes['products_car_make']][$Makes['products_car_model']]) && count($y) > 0){
-				$M_a [$products_car_make_old][$products_car_model_old]=$y;
+			if (!isset($M_a [$make][$model]) && count($y) > 0){
+				$M_a [$make_old][$model_old]=$y;
 				$y = array();
 			}
 			
-			if ($Makes['products_car_year_bof'] != 0 && $Makes['products_car_year_eof'] != 0){
-				if ($Makes['products_car_year_bof']  == $Makes['products_car_year_eof']){
-					$y [$Makes['products_car_year_bof']] = 1;
-				} elseif ($Makes['products_car_year_bof']  < $Makes['products_car_year_eof']){	
-					while ($Makes['products_car_year_bof'] <= $Makes['products_car_year_eof']){
-						$y [$Makes['products_car_year_bof']] = 1;
-						$Makes['products_car_year_bof']++;
+			if ($year_bof != 0 && $year_eof != 0){
+				if ($year_bof  == $year_eof){
+					$y [$year_bof] = 1;
+				} elseif ($year_bof  < $year_eof){	
+					while ($year_bof <= $year_eof){
+						$y [$year_bof] = 1;
+						$year_bof++;
 					}
 				}
 			}
-			$products_car_make_old = $Makes['products_car_make'];
-			$products_car_model_old = $Makes['products_car_model'];
-			$M_a [$Makes['products_car_make']][$Makes['products_car_model']] = array();
+			$make_old = $make;
+			$model_old = $model;
+			$M_a [$make][$model] = array();
 	}
 
-	$M_a [$products_car_make_old][$products_car_model_old]=$y;
+	$M_a [$make_old][$model_old]=$y;
 		
 
 		

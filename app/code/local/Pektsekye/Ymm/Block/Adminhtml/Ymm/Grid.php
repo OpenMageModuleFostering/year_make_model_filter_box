@@ -5,7 +5,6 @@ class Pektsekye_Ymm_Block_Adminhtml_Ymm_Grid extends Mage_Adminhtml_Block_Widget
   public function __construct()
   {
       parent::__construct();
-	 // $this->setEmptyText(Mage::helper('ymm')->__('This product is set to be always shown'));
       $this->setId('ymmGrid');
       $this->setDefaultSort('id');
       $this->setDefaultDir('ASC');
@@ -21,12 +20,6 @@ class Pektsekye_Ymm_Block_Adminhtml_Ymm_Grid extends Mage_Adminhtml_Block_Widget
 
   protected function _prepareColumns()
   {
-      $this->addColumn('id', array(
-          'header'    => Mage::helper('ymm')->__('ID'),
-          'align'     =>'right',
-          'width'     => '50px',
-          'index'     => 'id',
-      ));
 
       $this->addColumn('products_id', array(
           'header'    => Mage::helper('ymm')->__('Products ID'),
@@ -76,9 +69,7 @@ class Pektsekye_Ymm_Block_Adminhtml_Ymm_Grid extends Mage_Adminhtml_Block_Widget
                 'index'     => 'stores',
                 'is_system' => true,
         ));
-		
-		$this->addExportType('*/*/exportCsv', Mage::helper('ymm')->__('CSV'));
-		$this->addExportType('*/*/exportXml', Mage::helper('ymm')->__('XML'));
+
 	  
       return parent::_prepareColumns();
   }
@@ -93,23 +84,7 @@ class Pektsekye_Ymm_Block_Adminhtml_Ymm_Grid extends Mage_Adminhtml_Block_Widget
              'url'      => $this->getUrl('*/*/massDelete'),
              'confirm'  => Mage::helper('ymm')->__('Are you sure?')
         ));
-
-        $statuses = Mage::getSingleton('ymm/status')->getOptionArray();
-
-        array_unshift($statuses, array('label'=>'', 'value'=>''));
-        $this->getMassactionBlock()->addItem('status', array(
-             'label'=> Mage::helper('ymm')->__('Change status'),
-             'url'  => $this->getUrl('*/*/massStatus', array('_current'=>true)),
-             'additional' => array(
-                    'visibility' => array(
-                         'name' => 'status',
-                         'type' => 'select',
-                         'class' => 'required-entry',
-                         'label' => Mage::helper('ymm')->__('Status'),
-                         'values' => $statuses
-                     )
-             )
-        ));
+		
         return $this;
     }
 

@@ -37,7 +37,7 @@ class Pektsekye_Ymm_Block_Adminhtml_Ymm_Edit extends Mage_Adminhtml_Block_Widget
     public function getHeaderText()
     {
         if( Mage::registry('ymm_data') && Mage::registry('ymm_data')->getId() ) {
-            return Mage::helper('ymm')->__("Edit Item '%s'", $this->htmlEscape(Mage::registry('ymm_data')->getTitle()));
+            return Mage::helper('ymm')->__('Edit Item');
         } else {
             return Mage::helper('ymm')->__('Add Item');
         }

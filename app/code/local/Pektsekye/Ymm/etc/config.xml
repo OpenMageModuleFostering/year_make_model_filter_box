@@ -2,7 +2,7 @@
 <config>
     <modules>
         <Pektsekye_Ymm>
-            <version>0.1.0</version>
+            <version>0.2.0</version>
         </Pektsekye_Ymm>
     </modules>
     <frontend>
@@ -45,6 +45,11 @@
 						<sort_order>0</sort_order>
 						<action>ymm/adminhtml_ymm</action>
 					</items>
+					<import module="ymm">
+						<title>Import / Export</title>
+						<sort_order>1</sort_order>
+						<action>ymm/adminhtml_ymm/importExport</action>
+					</import>					
 				</children>
 			</ymm>
 		</menu>
