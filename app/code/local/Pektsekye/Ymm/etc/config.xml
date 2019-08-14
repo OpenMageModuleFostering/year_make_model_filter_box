@@ -82,7 +82,17 @@
 				<rewrite> 
 					<category>Pektsekye_Catalog_Model_Category</category> 
 				</rewrite> 
-			</catalog> 		
+			</catalog> 	
+			<catalog_resource_eav_mysql4>
+				<rewrite> 
+					<category>Pektsekye_Catalog_Model_Resource_Eav_Mysql4_Category</category> 
+				</rewrite>			
+			</catalog_resource_eav_mysql4>
+			<catalogsearch>
+				<rewrite> 
+					<layer>Pektsekye_CatalogSearch_Model_Layer</layer> 
+				</rewrite> 
+			</catalogsearch> 			
             <ymm>
                 <class>Pektsekye_Ymm_Model</class>
                 <resourceModel>ymm_mysql4</resourceModel>
@@ -97,6 +107,7 @@
             </ymm_mysql4>
         </models>
         <resources>
+		
             <ymm_setup>
                 <setup>
                     <module>Pektsekye_Ymm</module>

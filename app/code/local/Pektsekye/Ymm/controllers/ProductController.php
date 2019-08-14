@@ -6,7 +6,7 @@ class Pektsekye_Ymm_ProductController extends Mage_Core_Controller_Front_Action
     public function listAction()
     { 
         if(!$this->getRequest()->getParam('Make') || $this->getRequest()->getParam('Make') == 'all') {
-            $this->_redirectReferer();
+			 $this->getResponse()->setRedirect(Mage::getBaseUrl());
             return;
         }
         $this->loadLayout();

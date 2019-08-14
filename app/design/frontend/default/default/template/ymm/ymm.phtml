@@ -1,10 +1,10 @@
 <?php
 /*
-Written by pektsekye@gmail.com on Monday Jul 27  2009
-version 3.0
+Written by pektsekye@gmail.com on Wednesday Jul 29  2009
+version 4.0
 */
 
-
+$module = $this->getRequest()->getModuleName();
 $resource = Mage::getSingleton('core/resource');
 $read= $resource->getConnection('core_read');
 $ymmTable = $resource->getTableName('ymm');
@@ -122,20 +122,25 @@ function pop_year(){
 }
 </script>';
 
+	$expire = time()+60*60*24*90;
+	
 	if (isset($_GET['Make'])){
-		if($_GET['Make'] != 'all')
+		setcookie("Make_selected", $_GET['Make'], $expire,'/');
+		if ($_GET['Make'] != 'all')
 			$Make_selected_var = $_GET['Make'];
 	} elseif (isset($_COOKIE['Make_selected']) && $_COOKIE['Make_selected'] != 'all')	
 		$Make_selected_var = $_COOKIE['Make_selected'];
 		
 	if (isset($_GET['Model'])){
-		if($_GET['Model'] != 'all')
+		setcookie("Model_selected", $_GET['Model'], $expire,'/'); 
+		if ($_GET['Model'] != 'all')
 			$Model_selected_var = $_GET['Model'];
 	} elseif (isset($_COOKIE['Model_selected']) && $_COOKIE['Model_selected'] != 'all')
 		$Model_selected_var = $_COOKIE['Model_selected'];
 		
 	if (isset($_GET['Year'])){
-		if($_GET['Year'] != 0)
+		setcookie("Year_selected", $_GET['Year'], $expire,'/');
+		if ($_GET['Year'] != 0)
 			$Year_selected_var = $_GET['Year'];
 	} elseif (isset($_COOKIE['Year_selected']) && $_COOKIE['Year_selected'] != 0)
 		$Year_selected_var = $_COOKIE['Year_selected'];
@@ -154,7 +159,7 @@ function pop_year(){
     <div class="head">
         <h4><span><?php echo $this->__('Select Vehicle') ?></span></h4>
     </div>
-    <form name="make_model_year"  action="<?php echo $this->_resultPage != null ? Mage::getUrl($this->_resultPage) : '' ;?>" method="get">
+    <form name="make_model_year"  action="<?php echo $module == 'cms' || $module == 'ymm' ? Mage::getUrl('ymm/product/list') : '' ;?>" method="get">
         <div class="content">
 			<select name="Make" onChange="pop_model();"  style="width: 100%">
 			<?php
@@ -179,7 +184,7 @@ function pop_year(){
         </div>
         <div class="actions">
 		<button class="form-button-alt right" type="submit"><span><?php echo $this->__('Go') ?></span></button>
-		<?php if($this->_resultPage == null && isset($Make_selected_var)): ?><a href="?Make=all&Model=all&Year=0">Clear Vehicle</a>&nbsp;&nbsp;&nbsp;&nbsp;<?php endif ?>
+		<?php if(isset($Make_selected_var)): ?><a href="<?php echo $module == 'ymm' ? Mage::getBaseUrl() : '' ; ?>?Make=all&Model=all&Year=0">Clear Vehicle</a>&nbsp;&nbsp;&nbsp;&nbsp;<?php endif ?>
 		</div>
     </form>
 </div>	

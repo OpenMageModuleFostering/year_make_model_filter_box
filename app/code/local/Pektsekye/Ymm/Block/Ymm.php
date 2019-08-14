@@ -1,11 +1,10 @@
 <?php
 class Pektsekye_Ymm_Block_Ymm extends Mage_Core_Block_Template
 {
-	
-	protected $_resultPage = null;
 		
 	public function _prepareLayout()
     {
+	    Mage::app()->cleanCache(array(Mage_Catalog_Model_Category::CACHE_TAG));
 		return parent::_prepareLayout();
     }
     
@@ -16,13 +15,6 @@ class Pektsekye_Ymm_Block_Ymm extends Mage_Core_Block_Template
         }
         return $this->getData('ymm');
         
-    }
-	
-	public function setResultPage($resultPage)
-    {
-            $this->_resultPage = $resultPage;
-
-        return $this;
     }
 	
 }
