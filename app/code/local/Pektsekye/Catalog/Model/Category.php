@@ -1,9 +1,4 @@
 <?php
-/*
-Written by pektsekye@gmail.com on Monday Jul 20  2009
-version 1.0
-*/
-
 
 class Pektsekye_Catalog_Model_Category extends Mage_Catalog_Model_Category
 {
@@ -16,9 +11,9 @@ class Pektsekye_Catalog_Model_Category extends Mage_Catalog_Model_Category
     public function getProductCollection()
     {
 		
-		$expire=time()+60*60*24*90;
+		$expire = time()+60*60*24*90;
 		$where = "";
-
+		
 		if (isset($_GET['Make'])){
 			setcookie("Make_selected", $_GET['Make'], $expire,'/');
 			if ($_GET['Make'] != 'all')
@@ -42,43 +37,26 @@ class Pektsekye_Catalog_Model_Category extends Mage_Catalog_Model_Category
 			
 
 		if (isset($Make_selected_var))
-			$where .= " (products_car_make='".$Make_selected_var."' or products_car_make='') ";
+			$where .= " (make='".$Make_selected_var."' or make='') ";
 
 		if (isset($Model_selected_var))
-			$where .= ($where != '' ? ' and ' : '') . " (products_car_model='".$Model_selected_var."' or products_car_model='') ";
+			$where .= ($where != '' ? ' and ' : '') . " (model='".$Model_selected_var."' or model='') ";
 
 		if (isset($Year_selected_var))
-			$where .= ($where != '' ? ' and ' : '') . " ((products_car_year_bof <= '".$Year_selected_var."' and products_car_year_eof >= '".$Year_selected_var."') or (products_car_year_bof=0  and products_car_year_eof=0)) ";	
+			$where .= ($where != '' ? ' and ' : '') . " ((year_bof <= '".$Year_selected_var."' and year_eof >= '".$Year_selected_var."') or (year_bof=0  and year_eof=0)) ";	
 
 
 		if ($where != ''){
 
-			$resource = Mage::getSingleton('core/resource');
+			$resource = Mage::getSingleton('core/resource'); 
 			$read= $resource->getConnection('core_read');
-			$ymmTable = $resource->getTableName('ymm');
-			$select = $read->select()
-									->distinct()
-									->from($ymmTable,array('products_id'))
-									->where($where);	
-			$rows = $read->fetchAll($select);
-	
-			$ids = array();	
-			
-			if (count($rows) > 0)
-				foreach ($rows as $r)
-					$ids [] = $r['products_id'];
-			  
 			$productTable = $resource->getTableName('catalog_product_entity');
-			$select = $read->select()
-									->distinct()
-									->from($productTable,array('entity_id'))
-									->where("entity_id not in (SELECT DISTINCT products_id FROM ymm)");
-			$rows = $read->fetchAll($select);
+			$ymmTable = $resource->getTableName('ymm');
+			$rows = $read->fetchAll("SELECT entity_id FROM $productTable LEFT JOIN $ymmTable USING (entity_id) WHERE ymm_id IS NULL OR $where");
 
-			if (count($rows) > 0)
-				foreach ($rows as $r)
-					$ids [] = $r['entity_id'];
-			
+			foreach ($rows as $r)
+				$ids [] = $r['entity_id'];
+
 			$collection = Mage::getResourceModel('catalog/product_collection')
 				->setStoreId($this->getStoreId())
 				->addCategoryFilter($this)

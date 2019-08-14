@@ -5,4 +5,30 @@
             <block type="ymm/ymm" name="ymm" template="ymm/ymm.phtml" />
         </reference>
     </catalog_category_view>
+	
+	<cms_page>
+        <reference name="right">
+            <block type="ymm/ymm" name="ymm" template="ymm/ymm.phtml">
+			                <action method="setResultPage"><resultPage>ymm/product/list</resultPage></action>
+			</block>
+        </reference>
+    </cms_page>
+	
+	    <ymm_product_list>
+        <!-- Mage_Tag -->
+        <reference name="content">
+            <block type="ymm/product_result" name="ymm_products" template="catalogsearch/result.phtml">
+                <block type="catalog/product_list" name="search_result_list" template="catalog/product/list.phtml"></block>
+                <action method="setListOrders"/>
+                <action method="setListModes"/>
+                <action method="setListCollection"/>
+            </block>
+        </reference>
+		 <reference name="right">
+            <block type="ymm/ymm" name="ymm" template="ymm/ymm.phtml">
+			                <action method="setResultPage"><resultPage>ymm/product/list</resultPage></action>
+			</block>
+        </reference>
+    </ymm_product_list>
+	
 </layout> 

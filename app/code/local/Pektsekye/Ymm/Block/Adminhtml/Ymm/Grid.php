@@ -6,7 +6,7 @@ class Pektsekye_Ymm_Block_Adminhtml_Ymm_Grid extends Mage_Adminhtml_Block_Widget
   {
       parent::__construct();
       $this->setId('ymmGrid');
-      $this->setDefaultSort('id');
+      $this->setDefaultSort('ymm_id');
       $this->setDefaultDir('ASC');
       $this->setSaveParametersInSession(true);
   }
@@ -21,34 +21,34 @@ class Pektsekye_Ymm_Block_Adminhtml_Ymm_Grid extends Mage_Adminhtml_Block_Widget
   protected function _prepareColumns()
   {
 
-      $this->addColumn('products_id', array(
+      $this->addColumn('entity_id', array(
           'header'    => Mage::helper('ymm')->__('Products ID'),
           'align'     =>'left',
-          'index'     => 'products_id',
+          'index'     => 'entity_id',
       ));
 	  
-      $this->addColumn('products_car_make', array(
+      $this->addColumn('make', array(
           'header'    => Mage::helper('ymm')->__('Vehicle Make'),
           'align'     =>'left',
-          'index'     => 'products_car_make',
+          'index'     => 'make',
       ));
 
-      $this->addColumn('products_car_model', array(
+      $this->addColumn('model', array(
           'header'    => Mage::helper('ymm')->__('Vehicle Model'),
           'align'     =>'left',
-          'index'     => 'products_car_model',
+          'index'     => 'model',
       ));
 
-      $this->addColumn('products_car_year_bof', array(
+      $this->addColumn('year_bof', array(
           'header'    => Mage::helper('ymm')->__('From Year'),
           'align'     =>'left',
-          'index'     => 'products_car_year_bof',
+          'index'     => 'year_bof',
       ));
 
-      $this->addColumn('products_car_year_eof', array(
+      $this->addColumn('year_eof', array(
           'header'    => Mage::helper('ymm')->__('To Year'),
           'align'     =>'left',
-          'index'     => 'products_car_year_eof',
+          'index'     => 'year_eof',
       ));
 	  
         $this->addColumn('action',
@@ -76,7 +76,7 @@ class Pektsekye_Ymm_Block_Adminhtml_Ymm_Grid extends Mage_Adminhtml_Block_Widget
 
     protected function _prepareMassaction()
     {
-        $this->setMassactionIdField('id');
+        $this->setMassactionIdField('ymm_id');
         $this->getMassactionBlock()->setFormFieldName('ymm');
 
         $this->getMassactionBlock()->addItem('delete', array(

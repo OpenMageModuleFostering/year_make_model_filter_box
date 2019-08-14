@@ -8,34 +8,34 @@ class Pektsekye_Ymm_Block_Adminhtml_Ymm_Edit_Tab_Form extends Mage_Adminhtml_Blo
       $this->setForm($form);
       $fieldset = $form->addFieldset('ymm_form', array('legend'=>Mage::helper('ymm')->__('Item information')));
      
-      $fieldset->addField('products_id', 'text', array(
+      $fieldset->addField('entity_id', 'text', array(
           'label'     => Mage::helper('ymm')->__('Products ID'),
           'required'  => true,
-          'name'      => 'products_id',
+          'name'      => 'entity_id',
       ));
      
-      $fieldset->addField('products_car_make', 'text', array(
+      $fieldset->addField('make', 'text', array(
           'label'     => Mage::helper('ymm')->__('Vehicle Make'),
           'required'  => true,
-          'name'      => 'products_car_make',
+          'name'      => 'make',
       ));
      
-      $fieldset->addField('products_car_model', 'text', array(
+      $fieldset->addField('model', 'text', array(
           'label'     => Mage::helper('ymm')->__('Vehicle Model'),
           'required'  => false,
-          'name'      => 'products_car_model',
+          'name'      => 'model',
       ));
      
-      $fieldset->addField('products_car_year_bof', 'text', array(
+      $fieldset->addField('year_bof', 'text', array(
           'label'     => Mage::helper('ymm')->__('From Year (dddd)'),
           'required'  => false,
-          'name'      => 'products_car_year_bof',
+          'name'      => 'year_bof',
       ));
      
-      $fieldset->addField('products_car_year_eof', 'text', array(
+      $fieldset->addField('year_eof', 'text', array(
           'label'     => Mage::helper('ymm')->__('To Year (dddd)'),
           'required'  => false,
-          'name'      => 'products_car_year_eof',
+          'name'      => 'year_eof',
       ));	  
 
       if ( Mage::getSingleton('adminhtml/session')->getYmmData() )

@@ -1,8 +1,9 @@
 <?php
 /*
-Written by pektsekye@gmail.com on Friday Jul 24  2009
-version 1.0
+Written by pektsekye@gmail.com on Monday Jul 27  2009
+version 3.0
 */
+
 
 $resource = Mage::getSingleton('core/resource');
 $read= $resource->getConnection('core_read');
@@ -10,12 +11,12 @@ $ymmTable = $resource->getTableName('ymm');
 
 $select = $read->select()
 						->distinct()
-						->from($ymmTable,array('products_car_make','products_car_model','products_car_year_bof','products_car_year_eof'))
-						->where('products_car_make != ?','')
-						->where('products_car_model != ?','')
-						->where('products_car_year_bof != ?',0)
-						->where('products_car_year_eof != ?',0)
-						->order(array('products_car_make', 'products_car_model', 'products_car_year_bof', 'products_car_year_eof')) ;
+						->from($ymmTable,array('make','model','year_bof','year_eof'))
+						->where('make != ?','')
+						->where('model != ?','')
+						->where('year_bof != ?',0)
+						->where('year_eof != ?',0)
+						->order(array('make', 'model', 'year_bof', 'year_eof')) ;
    
 $rows = $read->fetchAll($select);
 			
@@ -35,34 +36,29 @@ var c = new Array();';
 	$make_old = '';
 	$model_old = ''; 
 	
-	foreach ($rows as $Makes) {
-		
-			$make = $Makes['products_car_make'];
-			$model = $Makes['products_car_model'];
-			$year_bof = $Makes['products_car_year_bof'];
-			$year_eof = $Makes['products_car_year_eof'];
+	foreach ($rows as $r) {
 			
-			if (!isset($M_a [$make]))
-				$Make_array[] = array('id' => $make, 'text' => $make);
+			if (!isset($M_a [$r['make']]))
+				$Make_array[] = array('id' => $r['make'], 'text' => $r['make']);
 
-			if (!isset($M_a [$make][$model]) && count($y) > 0){
+			if (!isset($M_a [$r['make']][$r['model']]) && count($y) > 0){
 				$M_a [$make_old][$model_old]=$y;
 				$y = array();
 			}
 			
-			if ($year_bof != 0 && $year_eof != 0){
-				if ($year_bof  == $year_eof){
-					$y [$year_bof] = 1;
-				} elseif ($year_bof  < $year_eof){	
-					while ($year_bof <= $year_eof){
-						$y [$year_bof] = 1;
-						$year_bof++;
+			if ($r['year_bof'] != 0 && $r['year_eof'] != 0){
+				if ($r['year_bof']  == $r['year_eof']){
+					$y [$r['year_bof']] = 1;
+				} elseif ($r['year_bof']  < $r['year_eof']){	
+					while ($r['year_bof'] <= $r['year_eof']){
+						$y [$r['year_bof']] = 1;
+						$r['year_bof']++;
 					}
 				}
 			}
-			$make_old = $make;
-			$model_old = $model;
-			$M_a [$make][$model] = array();
+			$make_old = $r['make'];
+			$model_old = $r['model'];
+			$M_a [$r['make']][$r['model']] = array();
 	}
 
 	$M_a [$make_old][$model_old]=$y;
@@ -158,7 +154,7 @@ function pop_year(){
     <div class="head">
         <h4><span><?php echo $this->__('Select Vehicle') ?></span></h4>
     </div>
-    <form name="make_model_year"  method="get">
+    <form name="make_model_year"  action="<?php echo $this->_resultPage != null ? Mage::getUrl($this->_resultPage) : '' ;?>" method="get">
         <div class="content">
 			<select name="Make" onChange="pop_model();"  style="width: 100%">
 			<?php
@@ -183,7 +179,7 @@ function pop_year(){
         </div>
         <div class="actions">
 		<button class="form-button-alt right" type="submit"><span><?php echo $this->__('Go') ?></span></button>
-		<a href="?Make=all&Model=all&Year=0">Clear Vehicle</a>&nbsp;&nbsp;&nbsp;&nbsp;
+		<?php if($this->_resultPage == null && isset($Make_selected_var)): ?><a href="?Make=all&Model=all&Year=0">Clear Vehicle</a>&nbsp;&nbsp;&nbsp;&nbsp;<?php endif ?>
 		</div>
     </form>
 </div>	

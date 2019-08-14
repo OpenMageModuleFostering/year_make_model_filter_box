@@ -52,11 +52,11 @@ class Pektsekye_Ymm_Adminhtml_YmmController extends Mage_Adminhtml_Controller_ac
 	public function saveAction() {
 		if ($data = $this->getRequest()->getPost()) {
 			
-			$data ['products_id'] = (int) $data ['products_id'];
-			$data ['products_car_make'] = trim(preg_replace('/[^\w\s-]/','',$data ['products_car_make']));
-			$data ['products_car_model'] = trim(preg_replace('/[^\w\s-]/','',$data ['products_car_model']));
-			$data ['products_car_year_bof'] = (int) $data ['products_car_year_bof'];
-			$data ['products_car_year_eof'] = (int) $data ['products_car_year_eof'];
+			$data ['entity_id'] = (int) $data ['entity_id'];
+			$data ['make'] = trim(preg_replace('/[^\w\s-]/','',$data ['make']));
+			$data ['model'] = trim(preg_replace('/[^\w\s-]/','',$data ['model']));
+			$data ['year_bof'] = (int) $data ['year_bof'];
+			$data ['year_eof'] = (int) $data ['year_eof'];
 
 			$model = Mage::getModel('ymm/ymm');		
 			$model->setData($data)
@@ -243,12 +243,12 @@ class Pektsekye_Ymm_Adminhtml_YmmController extends Mage_Adminhtml_Controller_ac
 					$read= $resource->getConnection('core_read');
 					$ymmTable = $resource->getTableName('ymm');
 					$select = $read->select()
-											->from($ymmTable,array('id'))
-											->where("products_id=?",(int)$v[0])
-											->where("products_car_make=?",$v[1])
-											->where("products_car_model=?",$v[2])
-											->where("products_car_year_bof=?",(int)$v[3])
-											->where("products_car_year_eof=?",(int)$v[4])											
+											->from($ymmTable,array('ymm_id'))
+											->where("entity_id=?",(int)$v[0])
+											->where("make=?",$v[1])
+											->where("model=?",$v[2])
+											->where("year_bof=?",(int)$v[3])
+											->where("year_eof=?",(int)$v[4])											
 											->limit(1);
 											
 					if($read->fetchOne($select)){
@@ -256,11 +256,11 @@ class Pektsekye_Ymm_Adminhtml_YmmController extends Mage_Adminhtml_Controller_ac
 					}	 
 
 					$data  = array(
-						'products_id'=>$v[0],
-						'products_car_make' => $v[1],
-						'products_car_model' => $v[2],
-						'products_car_year_bof'  => $v[3],
-						'products_car_year_eof'=>$v[4],
+						'entity_id'=>$v[0],
+						'make' => $v[1],
+						'model' => $v[2],
+						'year_bof'  => $v[3],
+						'year_eof'=>$v[4],
 					);
 
 					$model  = Mage::getModel('ymm/ymm');
@@ -271,7 +271,7 @@ class Pektsekye_Ymm_Adminhtml_YmmController extends Mage_Adminhtml_Controller_ac
             }  
         }
         else {
-            Mage::throwException(Mage::helper('tax')->__('Invalid file format upload attempt'));
+            Mage::throwException(Mage::helper('ymm')->__('Invalid file format upload attempt'));
         }
 		
 		return $number;
