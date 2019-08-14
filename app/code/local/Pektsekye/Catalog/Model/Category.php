@@ -11,9 +11,9 @@ class Pektsekye_Catalog_Model_Category extends Mage_Catalog_Model_Category
     public function getProductCollection()
     {
 		
-		$helper = new Pektsekye_Ymm_Helper_Data;
+		$ids = Mage::helper('ymm')->getProductIds();
 
-		if($ids = $helper->getProductIds()){ 
+		if($ids){ 
 
 			$collection = Mage::getResourceModel('catalog/product_collection')
 				->setStoreId($this->getStoreId())

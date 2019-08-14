@@ -16,8 +16,7 @@ class Pektsekye_CatalogSearch_Model_Layer extends Mage_CatalogSearch_Model_Layer
         }
         else {
 			
-			$helper = new Pektsekye_Ymm_Helper_Data;
-			$ids = $helper->getProductIds();
+			$ids = Mage::helper('ymm')->getProductIds();
 
 			if($ids){ 
 
@@ -33,6 +32,9 @@ class Pektsekye_CatalogSearch_Model_Layer extends Mage_CatalogSearch_Model_Layer
 						->addStoreFilter()
 						->addUrlRewrite();
 						
+					Mage::getSingleton('catalog/product_status')->addVisibleFilterToCollection($collection);
+					Mage::getSingleton('catalog/product_visibility')->addVisibleInSearchFilterToCollection($collection);
+					
 				} elseif (!Mage::helper('catalogSearch')->getEscapedQueryText()){
 					
 					$collection = Mage::getResourceModel('catalog/product_collection')
@@ -45,6 +47,9 @@ class Pektsekye_CatalogSearch_Model_Layer extends Mage_CatalogSearch_Model_Layer
 								->addStoreFilter()
 								->addUrlRewrite();	
 								
+					Mage::getSingleton('catalog/product_status')->addVisibleFilterToCollection($collection);
+					Mage::getSingleton('catalog/product_visibility')->addVisibleInSearchFilterToCollection($collection);	
+					
 				} else {
 					
 					$collection = Mage::getResourceModel('catalogsearch/fulltext_collection');
@@ -52,8 +57,6 @@ class Pektsekye_CatalogSearch_Model_Layer extends Mage_CatalogSearch_Model_Layer
 					
 				}
 				
-				Mage::getSingleton('catalog/product_status')->addVisibleFilterToCollection($collection);
-				Mage::getSingleton('catalog/product_visibility')->addVisibleInSearchFilterToCollection($collection);
 			
 			} else {
 				

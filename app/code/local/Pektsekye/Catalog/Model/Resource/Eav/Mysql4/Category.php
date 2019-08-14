@@ -21,9 +21,9 @@ class Pektsekye_Catalog_Model_Resource_Eav_Mysql4_Category extends Mage_Catalog_
 		
 		if(Mage::getStoreConfig('catalog/navigation/filtering', Mage::app()->getStore()->getStoreId())){	
 		
-			$helper = new Pektsekye_Ymm_Helper_Data;
+			$ids = Mage::helper('ymm')->getProductIds();
 
-			if($ids = $helper->getProductIds()){
+			if($ids){
 				
 				$pids = implode(',',$ids);
 				$resource = Mage::getSingleton('core/resource'); 

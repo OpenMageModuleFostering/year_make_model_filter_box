@@ -9,6 +9,12 @@ class Pektsekye_Ymm_ProductController extends Mage_Core_Controller_Front_Action
 			 $this->getResponse()->setRedirect(Mage::getBaseUrl());
             return;
         }
+		
+		if(!Mage::helper('ymm')->getProductIds()){
+			$this->getResponse()->setRedirect(Mage::getBaseUrl());
+            return;
+		}
+		
         $this->loadLayout();
         $this->_initLayoutMessages('checkout/session');
         $this->_initLayoutMessages('tag/session');
