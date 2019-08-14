@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+      <catalog_category_view>
+        <reference name="right">
+            <block type="ymm/ymm" name="ymm" template="ymm/ymm.phtml" />
+        </reference>
+    </catalog_category_view>
+</layout> 

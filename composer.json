@@ -1,0 +1,16 @@
+{
+    "name": "OpenMageModuleFostering/Year_Make_Model_Filter_Box",
+    "type": "magento-module",
+    "license": "OSL-v3.0",
+    "homepage": "",
+    "description": "Year Make Model (YMM) "Select Vehicle" filter box for Auto Parts web sites",
+    "authors": [
+    {
+        "name": "Stanislav",
+        "email": "pektsekye@gmail.com"
+    }
+],
+    "suggest": {
+        "magento-hackathon/magento-composer-installer": "*"
+    }
+}
