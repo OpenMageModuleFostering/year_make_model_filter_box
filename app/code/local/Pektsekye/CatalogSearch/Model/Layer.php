@@ -19,20 +19,41 @@ class Pektsekye_CatalogSearch_Model_Layer extends Mage_CatalogSearch_Model_Layer
 			$helper = new Pektsekye_Ymm_Helper_Data;
 			$ids = $helper->getProductIds();
 
-			if($ids && isset($_GET['Make'])){ 
-			
-				$collection = Mage::getResourceModel('catalog/product_collection')
-							->addAttributeToSelect(Mage::getSingleton('catalog/config')->getProductAttributes())
-							->addIdFilter($ids)
-							->setStore(Mage::app()->getStore())
-							->addMinimalPrice()
-							->addFinalPrice()
-							->addTaxPercents()
-							->addStoreFilter()
-							->addUrlRewrite();
+			if($ids){ 
 
-			Mage::getSingleton('catalog/product_status')->addVisibleFilterToCollection($collection);
-			Mage::getSingleton('catalog/product_visibility')->addVisibleInSearchFilterToCollection($collection);
+				if(Mage::helper('catalogSearch')->getEscapedQueryText() && Mage::getStoreConfig('catalog/search/filtering', Mage::app()->getStore()->getStoreId())){
+					$collection = Mage::getResourceModel('catalogsearch/fulltext_collection')
+						->addAttributeToSelect(Mage::getSingleton('catalog/config')->getProductAttributes())
+						->addSearchFilter(Mage::helper('catalogSearch')->getEscapedQueryText())
+						->addIdFilter($ids)						
+						->setStore(Mage::app()->getStore())
+						->addMinimalPrice()
+						->addFinalPrice()
+						->addTaxPercents()
+						->addStoreFilter()
+						->addUrlRewrite();
+						
+				} elseif (!Mage::helper('catalogSearch')->getEscapedQueryText()){
+					
+					$collection = Mage::getResourceModel('catalog/product_collection')
+								->addAttributeToSelect(Mage::getSingleton('catalog/config')->getProductAttributes())
+								->addIdFilter($ids)
+								->setStore(Mage::app()->getStore())
+								->addMinimalPrice()
+								->addFinalPrice()
+								->addTaxPercents()
+								->addStoreFilter()
+								->addUrlRewrite();	
+								
+				} else {
+					
+					$collection = Mage::getResourceModel('catalogsearch/fulltext_collection');
+					$this->prepareProductCollection($collection);
+					
+				}
+				
+				Mage::getSingleton('catalog/product_status')->addVisibleFilterToCollection($collection);
+				Mage::getSingleton('catalog/product_visibility')->addVisibleInSearchFilterToCollection($collection);
 			
 			} else {
 				

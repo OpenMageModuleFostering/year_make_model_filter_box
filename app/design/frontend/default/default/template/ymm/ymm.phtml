@@ -159,7 +159,18 @@ function pop_year(){
     <div class="head">
         <h4><span><?php echo $this->__('Select Vehicle') ?></span></h4>
     </div>
-    <form name="make_model_year"  action="<?php echo $module != 'catalog_category_view' ? Mage::getUrl('ymm/product/list') : '' ;?>" method="get">
+    <form name="make_model_year"  action="<?php 
+	$hidden = '';
+	if($module == 'catalog_category_view'){
+		echo '';
+	} elseif ($module == 'catalogsearch_result_index' && Mage::getStoreConfig('catalog/search/filtering', Mage::app()->getStore()->getStoreId())){
+		$hidden = '<input type="hidden" name="q" value="' . $request->getParam('q')  . '">';
+	}	else {
+		echo Mage::getUrl('ymm/product/list');
+	}	
+
+?>" method="get">
+<?php echo $hidden; ?>
         <div class="content">
 			<select name="Make" onChange="pop_model();"  style="width: 100%">
 			<?php
@@ -184,7 +195,17 @@ function pop_year(){
         </div>
         <div class="actions">
 		<button class="form-button-alt right" type="submit"><span><?php echo $this->__('Go') ?></span></button>
-		<?php if(isset($Make_selected_var)): ?><a href="<?php echo $module != 'catalog_category_view' ? Mage::getBaseUrl() : '' ; ?>?Make=all&Model=all&Year=0">Clear Vehicle</a>&nbsp;&nbsp;&nbsp;&nbsp;<?php endif ?>
+		<?php if(isset($Make_selected_var)): ?>
+			<a href="<?php 	
+				if($module == 'catalog_category_view'){
+					echo '?';
+				} elseif ($module == 'catalogsearch_result_index' && Mage::getStoreConfig('catalog/search/filtering', Mage::app()->getStore()->getStoreId())){
+					echo '?q=' . $request->getParam('q') . '&';
+				}	else {
+					echo Mage::getBaseUrl() . '?';
+				}	
+			?>Make=all&Model=all&Year=0">Clear Vehicle</a>&nbsp;&nbsp;&nbsp;&nbsp;
+		<?php endif ?>
 		</div>
     </form>
 </div>	

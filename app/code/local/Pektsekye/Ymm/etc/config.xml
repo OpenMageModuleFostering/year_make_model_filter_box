@@ -144,6 +144,9 @@
 			<navigation>
 				<filtering>1</filtering>
 			</navigation>
+			<search>
+				<filtering>1</filtering>
+			</search>
 		</catalog>
 	</default>	
 	
