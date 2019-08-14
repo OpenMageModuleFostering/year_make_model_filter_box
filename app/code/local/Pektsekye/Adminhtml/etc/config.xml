@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Pektsekye_Adminhtml>
+            <version>0.1.0</version>
+        </Pektsekye_Adminhtml>
+    </modules>
+    <global>
+        <blocks>
+            <adminhtml>
+				<rewrite> 
+					<page_footer>Pektsekye_Adminhtml_Block_Page_Footer</page_footer> 
+				</rewrite> 
+            </adminhtml>
+        </blocks>
+    </global>
+</config>
