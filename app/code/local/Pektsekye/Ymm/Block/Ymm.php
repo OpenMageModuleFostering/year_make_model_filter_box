@@ -4,7 +4,10 @@ class Pektsekye_Ymm_Block_Ymm extends Mage_Core_Block_Template
 		
 	public function _prepareLayout()
     {
-	    Mage::app()->cleanCache(array(Mage_Catalog_Model_Category::CACHE_TAG));
+		if(Mage::getStoreConfig('catalog/navigation/filtering', Mage::app()->getStore()->getStoreId())){
+			    Mage::app()->cleanCache(array(Mage_Catalog_Model_Category::CACHE_TAG));
+		}
+
 		return parent::_prepareLayout();
     }
     

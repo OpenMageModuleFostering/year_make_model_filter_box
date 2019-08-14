@@ -3,8 +3,8 @@
 Written by pektsekye@gmail.com on Wednesday Jul 29  2009
 version 4.0
 */
-
-$module = $this->getRequest()->getModuleName();
+$request = $this->getRequest();
+$module = $request->getModuleName() .'_'. $request->getControllerName() .'_'. $request->getActionName();
 $resource = Mage::getSingleton('core/resource');
 $read= $resource->getConnection('core_read');
 $ymmTable = $resource->getTableName('ymm');
@@ -159,7 +159,7 @@ function pop_year(){
     <div class="head">
         <h4><span><?php echo $this->__('Select Vehicle') ?></span></h4>
     </div>
-    <form name="make_model_year"  action="<?php echo $module != 'catalog' ? Mage::getUrl('ymm/product/list') : '' ;?>" method="get">
+    <form name="make_model_year"  action="<?php echo $module != 'catalog_category_view' ? Mage::getUrl('ymm/product/list') : '' ;?>" method="get">
         <div class="content">
 			<select name="Make" onChange="pop_model();"  style="width: 100%">
 			<?php
@@ -184,7 +184,7 @@ function pop_year(){
         </div>
         <div class="actions">
 		<button class="form-button-alt right" type="submit"><span><?php echo $this->__('Go') ?></span></button>
-		<?php if(isset($Make_selected_var)): ?><a href="<?php echo $module != 'catalog' ? Mage::getBaseUrl() : '' ; ?>?Make=all&Model=all&Year=0">Clear Vehicle</a>&nbsp;&nbsp;&nbsp;&nbsp;<?php endif ?>
+		<?php if(isset($Make_selected_var)): ?><a href="<?php echo $module != 'catalog_category_view' ? Mage::getBaseUrl() : '' ; ?>?Make=all&Model=all&Year=0">Clear Vehicle</a>&nbsp;&nbsp;&nbsp;&nbsp;<?php endif ?>
 		</div>
     </form>
 </div>	

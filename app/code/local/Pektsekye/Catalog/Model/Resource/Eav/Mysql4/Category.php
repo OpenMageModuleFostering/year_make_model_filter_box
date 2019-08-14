@@ -19,23 +19,27 @@ class Pektsekye_Catalog_Model_Resource_Eav_Mysql4_Category extends Mage_Catalog_
         $tree = Mage::getResourceModel('catalog/category_tree');
         /** @var $tree Mage_Catalog_Model_Resource_Eav_Mysql4_Category_Tree */
 		
-		$helper = new Pektsekye_Ymm_Helper_Data;
+		if(Mage::getStoreConfig('catalog/navigation/filtering', Mage::app()->getStore()->getStoreId())){	
+		
+			$helper = new Pektsekye_Ymm_Helper_Data;
 
-		if($ids = $helper->getProductIds()){
-			
-			$pids = implode(',',$ids);
-			$resource = Mage::getSingleton('core/resource'); 
-			$read= $resource->getConnection('core_read');
-			$categoryTable = $resource->getTableName('catalog_category_entity');
-			$category_productTable = $resource->getTableName('catalog/category_product_index');			
-			$rows = $read->fetchAll("SELECT entity_id FROM $categoryTable WHERE entity_id NOT IN (SELECT DISTINCT category_id FROM $category_productTable WHERE product_id in ($pids)) ");
-			
-			if(count($rows)>0)
-			foreach ($rows as $r)
-				$ids [] = $r['entity_id'];
+			if($ids = $helper->getProductIds()){
 				
-			$tree->addInactiveCategoryIds($ids);
-			
+				$pids = implode(',',$ids);
+				$resource = Mage::getSingleton('core/resource'); 
+				$read= $resource->getConnection('core_read');
+				$categoryTable = $resource->getTableName('catalog_category_entity');
+				$category_productTable = $resource->getTableName('catalog/category_product_index');			
+				$rows = $read->fetchAll("SELECT entity_id FROM $categoryTable WHERE entity_id NOT IN (SELECT DISTINCT category_id FROM $category_productTable WHERE product_id in ($pids)) ");
+				
+				if(count($rows)>0)
+				foreach ($rows as $r)
+					$ids [] = $r['entity_id'];
+					
+				$tree->addInactiveCategoryIds($ids);
+				
+			}
+		
 		}
 		
         $nodes = $tree->loadNode($parent)
