@@ -41,32 +41,11 @@ class Pektsekye_Ymm_Block_Product_Result extends Mage_Catalog_Block_Product_Abst
 
     protected function _getProductCollection()
     {
-		$helper = new Pektsekye_Ymm_Helper_Data;
 
-		if($ids = $helper->getProductIds()){ 
-					
-            $this->_productCollection = Mage::getResourceModel('catalog/product_collection')
-				->setStoreId($this->getStoreId())
-                ->addAttributeToSelect(Mage::getSingleton('catalog/config')->getProductAttributes())
-                ->addIdFilter($ids)
-                ->addStoreFilter()
-                ->addMinimalPrice()
-                ->addUrlRewrite();
-            Mage::getSingleton('catalog/product_status')->addSaleableFilterToCollection($this->_productCollection);
-            Mage::getSingleton('catalog/product_visibility')->addVisibleInSiteFilterToCollection($this->_productCollection);
-
-        } else {
-			
-            $this->_productCollection = Mage::getResourceModel('catalog/product_collection')
-				->setStoreId($this->getStoreId())
-                ->addAttributeToSelect(Mage::getSingleton('catalog/config')->getProductAttributes())
-                ->addStoreFilter()
-                ->addMinimalPrice()
-                ->addUrlRewrite();		
-            Mage::getSingleton('catalog/product_status')->addSaleableFilterToCollection($this->_productCollection);
-            Mage::getSingleton('catalog/product_visibility')->addVisibleInSiteFilterToCollection($this->_productCollection);			
-		}	
-
+        if (is_null($this->_productCollection)) {
+            $this->_productCollection = Mage::getSingleton('catalogsearch/layer')->getProductCollection();
+        }
+		
         return $this->_productCollection;
     }
 

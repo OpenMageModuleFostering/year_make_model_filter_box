@@ -1,22 +1,14 @@
 <?xml version="1.0"?>
 <layout version="0.1.0">
-      <catalog_category_view>
-        <reference name="right">
-            <block type="ymm/ymm" name="ymm" before="-" template="ymm/ymm.phtml" />
-        </reference>
-    </catalog_category_view>
 	
-	<cms_page>
+	<default>
         <reference name="right">
-            <block type="ymm/ymm" name="ymm" before="-" template="ymm/ymm.phtml">
-			                <action method="setResultPage"><resultPage>ymm/product/list</resultPage></action>
-			</block>
+            <block type="ymm/ymm" name="ymm" before="-" template="ymm/ymm.phtml"/>
         </reference>
-    </cms_page>
+    </default>
 	
 	    <ymm_product_list>
 		  <reference name="right">
-			<block type="ymm/ymm" name="ymm" before="-" template="ymm/ymm.phtml"/>
             <block type="catalogsearch/layer" name="catalogsearch.leftnav" after="ymm" template="catalog/layer/view.phtml"/>
         </reference>
         <reference name="content">
