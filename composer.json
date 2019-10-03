@@ -1,5 +1,7 @@
 {
     "keywords": [
         "openmage-module"
-    ]
+    ],
+    "name": "openmage-module-fostering\/year_make_model_filter_box",
+    "license": "OSL-3.0"
 }
